@@ -9,6 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.grupo25.hospital.models.entities.Appointment;
+import com.grupo25.hospital.models.entities.Area;
+import com.grupo25.hospital.models.entities.Shift;
+import com.grupo25.hospital.models.entities.Test;
+import com.grupo25.hospital.models.entities.Vaccine;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long>{
 
@@ -24,5 +28,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>{
 	
 	@Query(value = "select *from appointment where id_appointment = ?", nativeQuery = true)
 	Appointment getAppointmentById(Long id);
+	
+	@Query(value = "SELECT COUNT(a) FROM appointment a WHERE a.timestamp = :date AND a.id_area = :area")
+    int countAppointmentsByDateAndArea(@Param("date") LocalDateTime date, @Param("area") Area area);
+	
+	@Query(value = "SELECT COUNT(a) FROM appointment a WHERE a.timestamp = :date AND a.id_vaccine = :vaccine")
+    int countAppointmentsByDateAndVaccine(@Param("date") LocalDateTime date, @Param("vaccine") Vaccine vaccine);
+	
+	@Query(value = "SELECT COUNT(a) FROM appointment a WHERE a.timestamp = :date AND a.id_test = :test")
+    int countAppointmentsByDateAndTest(@Param("date") LocalDateTime date, @Param("test") Test test);
 	
 }

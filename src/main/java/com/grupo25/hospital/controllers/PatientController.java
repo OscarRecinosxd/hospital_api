@@ -1,5 +1,7 @@
 package com.grupo25.hospital.controllers;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -306,6 +308,9 @@ public class PatientController {
 					);
 			}
 			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			LocalDateTime searchDate = LocalDateTime.parse(newSchedule.getDate(), formatter);
+			
 			//Id de doctor se asigna hasta que el doctor atiende a la persona en una consulta.
 			if(type.getId_appointment_type() == 1) {
 				Vaccine vaccine = vaccService.findOneById(newSchedule.getIdVAT());
@@ -315,6 +320,16 @@ public class PatientController {
 							HttpStatus.BAD_REQUEST
 						);
 				}
+				
+				int totalAppointmentsByDateAndVaccine = appointmentService.countAppointmentByDateAndVaccine(searchDate, vaccine);
+				
+				if(totalAppointmentsByDateAndVaccine == 6) {
+					return new ResponseEntity<MessageDTO>(
+							new MessageDTO("Ya no hay más cupos disponibles para el día y turno seleccionado"),
+							HttpStatus.BAD_REQUEST
+						);
+				}
+				
 				appointmentService.registerInmu(newSchedule, type, vaccine, foundPerson);
 				return new ResponseEntity<MessageDTO>(
 						new MessageDTO("Cita agendada"),
@@ -326,6 +341,15 @@ public class PatientController {
 				if (area == null ) {
 					return new ResponseEntity<MessageDTO>(
 							new MessageDTO("Tipo de cita inválido"),
+							HttpStatus.BAD_REQUEST
+						);
+				}
+				
+				int totalAppointmentsByDateAndArea = appointmentService.countAppointmentByDateAndArea(searchDate, area);
+				
+				if(totalAppointmentsByDateAndArea == 6) {
+					return new ResponseEntity<MessageDTO>(
+							new MessageDTO("Ya no hay más cupos disponibles para el día y turno seleccionado"),
 							HttpStatus.BAD_REQUEST
 						);
 				}
@@ -342,6 +366,15 @@ public class PatientController {
 				if (test == null ) {
 					return new ResponseEntity<MessageDTO>(
 							new MessageDTO("Tipo de test inválido"),
+							HttpStatus.BAD_REQUEST
+						);
+				}
+				
+				int totalAppointmentsByDateAndTest = appointmentService.countAppointmentByDateAndTest(searchDate, test);
+				
+				if(totalAppointmentsByDateAndTest == 6) {
+					return new ResponseEntity<MessageDTO>(
+							new MessageDTO("Ya no hay más cupos disponibles para el día y turno seleccionado"),
 							HttpStatus.BAD_REQUEST
 						);
 				}

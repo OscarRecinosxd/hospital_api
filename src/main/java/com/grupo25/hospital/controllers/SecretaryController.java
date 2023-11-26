@@ -3,6 +3,7 @@ package com.grupo25.hospital.controllers;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -204,8 +205,28 @@ public class SecretaryController {
 			Appointment_type type = appService.findOneById(newSchedule.getType()); 
 			///////////////////Id de doctor se asigna hasta que el doctor atiende a la persona
 			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			LocalDateTime searchDate = LocalDateTime.parse(newSchedule.getDate(), formatter);
+			
+			
 			if(type.getId_appointment_type() == 1) {
 				Vaccine vaccine = vaccService.findOneById(newSchedule.getIdVAT());
+				
+				if (vaccine == null ) {
+					return new ResponseEntity<MessageDTO>(
+							new MessageDTO("Tipo de vacuna inválido"),
+							HttpStatus.BAD_REQUEST
+						);
+				}
+				
+				int totalAppointmentsByDateAndVaccine = appointmentService.countAppointmentByDateAndVaccine(searchDate, vaccine);
+				
+				if(totalAppointmentsByDateAndVaccine == 6) {
+					return new ResponseEntity<MessageDTO>(
+							new MessageDTO("Ya no hay más cupos disponibles para el día y turno seleccionado"),
+							HttpStatus.BAD_REQUEST
+						);
+				}
 				
 				appointmentService.registerSInmu(newSchedule, type, vaccine, foundPerson);
 				
@@ -217,6 +238,21 @@ public class SecretaryController {
 			if(type.getId_appointment_type() == 2) {
 				Area area = areaService.findOneById(newSchedule.getIdVAT());
 		    	
+				if (area == null ) {
+					return new ResponseEntity<MessageDTO>(
+							new MessageDTO("Tipo de cita inválido"),
+							HttpStatus.BAD_REQUEST
+						);
+				}
+				
+				int totalAppointmentsByDateAndArea = appointmentService.countAppointmentByDateAndArea(searchDate, area);
+				
+				if(totalAppointmentsByDateAndArea == 6) {
+					return new ResponseEntity<MessageDTO>(
+							new MessageDTO("Ya no hay más cupos disponibles para el día y turno seleccionado"),
+							HttpStatus.BAD_REQUEST
+						);
+				}
 				
 				appointmentService.registerSArea(newSchedule, type, area, foundPerson);
 				
@@ -227,6 +263,22 @@ public class SecretaryController {
 			}
 			if(type.getId_appointment_type() == 3) {
 				Test test = testService.findOneById(newSchedule.getIdVAT());
+				
+				if (test == null ) {
+					return new ResponseEntity<MessageDTO>(
+							new MessageDTO("Tipo de test inválido"),
+							HttpStatus.BAD_REQUEST
+						);
+				}
+				
+				int totalAppointmentsByDateAndTest = appointmentService.countAppointmentByDateAndTest(searchDate, test);
+				
+				if(totalAppointmentsByDateAndTest == 6) {
+					return new ResponseEntity<MessageDTO>(
+							new MessageDTO("Ya no hay más cupos disponibles para el día y turno seleccionado"),
+							HttpStatus.BAD_REQUEST
+						);
+				}
 				
 				appointmentService.registerSTest(newSchedule, type, test, foundPerson);
 				

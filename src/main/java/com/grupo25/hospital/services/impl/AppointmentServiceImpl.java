@@ -208,8 +208,21 @@ public class AppointmentServiceImpl implements AppointmentService{
 		appointment.setAppointment_details(details);
 		appointmentRepo.save(appointment);
 	}
-
 	
+	@Override
+	public int countAppointmentByDateAndArea(LocalDateTime date, Area area) throws Exception {
+        return appointmentRepo.countAppointmentsByDateAndArea(date, area);
+    }
+	
+	@Override
+	public int countAppointmentByDateAndVaccine(LocalDateTime date, Vaccine vaccine) throws Exception {
+        return appointmentRepo.countAppointmentsByDateAndVaccine(date, vaccine);
+    }
+	
+	@Override
+	public int countAppointmentByDateAndTest(LocalDateTime date, Test test) throws Exception {
+        return appointmentRepo.countAppointmentsByDateAndTest(date, test);
+    }
 
 	
 }

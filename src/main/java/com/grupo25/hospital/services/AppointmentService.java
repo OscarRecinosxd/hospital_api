@@ -32,6 +32,13 @@ public interface AppointmentService {
 	
 	List<Appointment> getAllAppointments(Long id_patient) throws Exception;
 	
+	int countAppointmentByDateAndArea(LocalDateTime date, Area area) throws Exception;
+
+	int countAppointmentByDateAndVaccine(LocalDateTime date, Vaccine vaccine) throws Exception;
+	
+	int countAppointmentByDateAndTest(LocalDateTime date, Test test) throws Exception;
+
+
 	Appointment getById(Long id) throws Exception;
 	
 }
