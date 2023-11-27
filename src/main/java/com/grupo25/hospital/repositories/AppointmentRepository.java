@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.grupo25.hospital.models.entities.Appointment;
 import com.grupo25.hospital.models.entities.Area;
+import com.grupo25.hospital.models.entities.Person;
 import com.grupo25.hospital.models.entities.Shift;
 import com.grupo25.hospital.models.entities.Test;
 import com.grupo25.hospital.models.entities.Vaccine;
@@ -22,7 +23,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>{
 
 	List<Appointment> findAllByTimestampBetween(LocalDateTime timestamp_Start, LocalDateTime timestamp_End);
 	
-	@Query(value = "select *from appointment where id_patient = ?", nativeQuery = true)
+	@Query(value = "select * from appointment where id_patient = ?", nativeQuery = true)
 	List<Appointment> patientAppointments(Long id);
 	
 	

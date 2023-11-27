@@ -323,7 +323,7 @@ public class PatientController {
 				
 				int totalAppointmentsByDateAndVaccine = appointmentService.countAppointmentByDateAndVaccine(searchDate, vaccine);
 				
-				if(totalAppointmentsByDateAndVaccine == 6) {
+				if(totalAppointmentsByDateAndVaccine >= 6) {
 					return new ResponseEntity<MessageDTO>(
 							new MessageDTO("Ya no hay más cupos disponibles para el día y turno seleccionado"),
 							HttpStatus.BAD_REQUEST
@@ -347,7 +347,7 @@ public class PatientController {
 				
 				int totalAppointmentsByDateAndArea = appointmentService.countAppointmentByDateAndArea(searchDate, area);
 				
-				if(totalAppointmentsByDateAndArea == 6) {
+				if(totalAppointmentsByDateAndArea >= 6) {
 					return new ResponseEntity<MessageDTO>(
 							new MessageDTO("Ya no hay más cupos disponibles para el día y turno seleccionado"),
 							HttpStatus.BAD_REQUEST
@@ -372,7 +372,7 @@ public class PatientController {
 				
 				int totalAppointmentsByDateAndTest = appointmentService.countAppointmentByDateAndTest(searchDate, test);
 				
-				if(totalAppointmentsByDateAndTest == 6) {
+				if(totalAppointmentsByDateAndTest >= 6) {
 					return new ResponseEntity<MessageDTO>(
 							new MessageDTO("Ya no hay más cupos disponibles para el día y turno seleccionado"),
 							HttpStatus.BAD_REQUEST
